@@ -5,16 +5,11 @@ from src.data_module import MNISTDataModule
 from src.model import DAE
 
 def main():
-    # Setup dispositivo
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
-
-    # Setup data module
+    
     dm = MNISTDataModule(batch_size=32)
 
-    # Setup modello
-    model = DAE().to(device)
+    model = DAE()
 
-    # Callbacks
     checkpoint_callback = ModelCheckpoint(
         monitor='val_loss',
         dirpath='checkpoints',
@@ -29,9 +24,8 @@ def main():
         mode='min',
     )
 
-    # Setup trainer
     trainer = Trainer(
-        max_epochs=20,
+        max_epochs=100,
         accelerator='auto',
         callbacks=[checkpoint_callback, early_stopping_callback]
     )
