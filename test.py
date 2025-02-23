@@ -1,5 +1,4 @@
 import torch
-from torchvision.utils import save_image
 from src.model import DAE
 from src.data_module import MNISTDataModule
 
@@ -21,7 +20,7 @@ test_loader = data_module.test_dataloader()
 test_images, _ = next(iter(test_loader))
 
 # Select one image from the batch
-image = test_images[1].unsqueeze(0)
+image = test_images[0].unsqueeze(0)
 noisy_image = image + 0.5 * torch.randn(*image.shape)
 noisy_image = torch.clamp(noisy_image, 0., 1.)
 
