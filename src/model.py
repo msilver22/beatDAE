@@ -35,13 +35,14 @@ class DAE(L.LightningModule):
         self.noise_factor = noise_factor
         self.criterion = nn.MSELoss()
         self.dae = ConvDenoiser()
+        self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     def forward(self, x):
         return self.dae(x)
 
     def training_step(self, batch, batch_idx):
         images, _ = batch
-        images = images.to(torch.float32)
+        images = images.to(self.device,torch.float32)
         noisy_imgs = images + self.noise_factor * torch.randn(*images.shape).to(self.device)
         noisy_imgs = torch.clamp(noisy_imgs, 0., 1.)
         outputs = self(noisy_imgs)
@@ -51,7 +52,7 @@ class DAE(L.LightningModule):
 
     def validation_step(self, batch, batch_idx):
         images, _ = batch
-        images = images.to(torch.float32)
+        images = images.to(self.device,torch.float32)
         noisy_imgs = images + self.noise_factor * torch.randn(*images.shape).to(self.device)
         noisy_imgs = torch.clamp(noisy_imgs, 0., 1.)
         outputs = self(noisy_imgs)
