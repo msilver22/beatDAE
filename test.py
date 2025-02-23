@@ -21,23 +21,30 @@ test_loader = data_module.test_dataloader()
 test_images, _ = next(iter(test_loader))
 
 # Select one image from the batch
-noisy_image = test_images[0].unsqueeze(0)
+image = test_images[1].unsqueeze(0)
+noisy_image = image + 0.5 * torch.randn(*image.shape)
+noisy_image = torch.clamp(noisy_image, 0., 1.)
 
 # Apply the model for denoising
 with torch.no_grad():
     denoised_image = model(noisy_image)
 
-# Plot both images
-fig, axes = plt.subplots(1, 2, figsize=(10, 5))
+# Plot the original, noisy, and denoised images
+fig, axes = plt.subplots(1, 3, figsize=(15, 5))
 
-# Plot noisy image
-axes[0].imshow(noisy_image.squeeze().cpu().numpy(), cmap='gray')
-axes[0].set_title('Noisy Image')
+# Plot original image
+axes[0].imshow(image.squeeze().cpu().numpy(), cmap='gray')
+axes[0].set_title('Original Image')
 axes[0].axis('off')
 
-# Plot denoised image
-axes[1].imshow(denoised_image.squeeze().cpu().numpy(), cmap='gray')
-axes[1].set_title('Denoised Image')
+# Plot noisy image
+axes[1].imshow(noisy_image.squeeze().cpu().numpy(), cmap='gray')
+axes[1].set_title('Noisy Image')
 axes[1].axis('off')
+
+# Plot denoised image
+axes[2].imshow(denoised_image.squeeze().cpu().numpy(), cmap='gray')
+axes[2].set_title('Denoised Image')
+axes[2].axis('off')
 
 plt.show()
