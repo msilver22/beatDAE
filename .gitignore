@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Lighting output files
+checkpoints/
+lightning_logs/
+
 # C extensions
 *.so
 
